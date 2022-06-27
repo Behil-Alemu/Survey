@@ -2,5 +2,9 @@
 {% block title %}Questions{% endblock %}
 
 {% block content %}
-<p>{{question.question}}</p>
+<h2>{{question.question}}</h2>
+<form action="/answer" method="POST">
+    <input type="text" placeholder="Answer here" name="answer">
+    <button>Next</button>
+</form>
 {% endblock %}
