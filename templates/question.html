@@ -2,21 +2,23 @@
 {% block title %}Questions{% endblock %}
 
 {% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<section class="messages">
+  {% for category,msg in messages %}
+  <p class="{{category}}">{{msg}}</p>
+  {% endfor  %}
+</section>
+{% endif %}
+{% endwith %}
+<h3>{{question.question}}</h3>
+<form action="/answer" method="POST">
+  {% for choice in question.choices %}
+        <input type="radio" id="pick" value ='{{choice}}' name="answer">
+        <label for="pick">{{choice}}</label>
+  {%endfor%}
+        <button>Next</button>
+</form>
 
-{% if question.choices != True %}
-    <h2>Respond with Yes or No please</h2>
-    <h3>{{question.question}}</h3>
-    <form action="/answer" method="POST">
-        <input type="text" placeholder="Answer here" name="answer">
-    <button>Next</button>
-    </form>
-{% elif question.choices%}
-    <h2>{{question.question}}</h2>
-    {% for choice in question.choices %}
-        <form action="/answer" method="POST">
-            <input type="checkbox" name="answer">
-        </form>
-    {%  endfor %}
-{%  endif %}
 
 {% endblock %}

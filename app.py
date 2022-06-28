@@ -36,7 +36,11 @@ def start_question(id):
     if (responses is None):
         return redirect('/')
     elif len(responses) == len(survey.questions):
-        return render_template('done.html')
+        return redirect('/alldone')
+    elif len(responses) != id:
+        flash('You are trying to access an invalid question')
+        return redirect('/')
+        
 
     question = survey.questions[id]
     return render_template('question.html', survey=survey, question_num=id, question=question)
@@ -52,9 +56,12 @@ def get_answer():
 
 
     if len(responses) == len(survey.questions):
-        return render_template('done.html')
+        return redirect('/alldone')
     else:
         return redirect(f"/questions/{len(responses)}")
 
 
-
+@app.route('/alldone')
+def survey_done():
+    '''Show the messege that it is all done '''
+    return render_template('done.html')
