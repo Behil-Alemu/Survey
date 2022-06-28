@@ -1,6 +1,8 @@
 from ast import increment_lineno
+from http.client import responses
 import imp
-from flask import Flask, Response, request, render_template, redirect, session
+from urllib import response
+from flask import Flask, Response, request, render_template, redirect, session,flash
 from flask_debugtoolbar import DebugToolbarExtension
 from surveys import Question, Survey, satisfaction_survey as survey
 
@@ -30,19 +32,29 @@ def start_survey():
 @app.route('/questions/<int:id>')
 def start_question(id):
     """Pulls up the first question from survey.py"""
+    responses = session['Responses']
+    if (responses is None):
+        return redirect('/')
+    elif len(responses) == len(survey.questions):
+        return render_template('done.html')
+
     question = survey.questions[id]
     return render_template('question.html', survey=survey, question_num=id, question=question)
 
-@app.route('/answer', method=["POST"])
+
+@app.route('/answer',methods=["POST"])
 def get_answer():
     """Add the response to session then redirect to question if not done"""
     input = request.form['answer']
-    res = session["Responses"].append(input)
+    responses = session["Responses"]
+    responses.append(input)
+    session["Responses"] = responses
 
-    if len(res) == len(survey.questions):
+
+    if len(responses) == len(survey.questions):
         return render_template('done.html')
     else:
-        return redirect("/questions/<int:id>")
+        return redirect(f"/questions/{len(responses)}")
 
 
 

@@ -2,9 +2,21 @@
 {% block title %}Questions{% endblock %}
 
 {% block content %}
-<h2>{{question.question}}</h2>
-<form action="/answer" method="POST">
-    <input type="text" placeholder="Answer here" name="answer">
+
+{% if question.choices != True %}
+    <h2>Respond with Yes or No please</h2>
+    <h3>{{question.question}}</h3>
+    <form action="/answer" method="POST">
+        <input type="text" placeholder="Answer here" name="answer">
     <button>Next</button>
-</form>
+    </form>
+{% elif question.choices%}
+    <h2>{{question.question}}</h2>
+    {% for choice in question.choices %}
+        <form action="/answer" method="POST">
+            <input type="checkbox" name="answer">
+        </form>
+    {%  endfor %}
+{%  endif %}
+
 {% endblock %}
